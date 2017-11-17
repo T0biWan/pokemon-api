@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poke-API</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.css">
+</head>
+
+<body>
+    <section class="hero is-info">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Pokémon API</h1>
+                <h2 class="subtitle">Gotta request 'em all</h2>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-12">
+                <div class="tile is-child">
+                    <div class="select">
+                        <select id="dropdown">
+                            <option value="pokemon">Pokemon</option>
+                            <option value="item">Item</option>
+                        </select>
+                    </div>
+                </div>
+            
+                <div class="tile is-child">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="form_input" class="input" type="text" placeholder="Search...">
+                        </div>
+                        <div class="control">
+                            <a id="button" class="button is-info" onclick="sendRequest()"><i class="fa fa-search"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <div class="card">
+                        <div class="card-content">
+                            <p id="response"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function sendRequest() {
+            var button = document.getElementById("button");
+            button.className = "button is-info is-loading";
+
+            var selected_dropdown_option = document.getElementById("dropdown").options[dropdown.selectedIndex].value;
+
+            var input_value = document.getElementById("form_input").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', "https://pokeapi.co/api/v2/" + selected_dropdown_option + "/" + input_value + "/", true);
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                console.log(xhr.readyState);
+                button.className = "button is-info";
+                if (requestIsCompleted(xhr) && requestWasSuccessful(xhr)) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById("response").innerHTML = response.name;
+                }
+            };
+        }
+
+        function requestIsCompleted(xmlHttpRequest) {
+            return xmlHttpRequest.readyState == 4;
+        }
+
+        function requestWasSuccessful(xmlHttpRequest) {
+            return xmlHttpRequest.status == 200;
+        }
+
+    </script>
+</body>
+
+</html>
